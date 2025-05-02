@@ -35,8 +35,11 @@ public class ReadData{
     //this should return a double array of the column
     //of data
     public double[][] getColumns(int col1, int col2){
-        double[][] columns = ...
-        ...
+        double[][] columns = new double[21908][2];
+        for(int row = 0; row < data.length; row++){
+                columns[row][0] = data[row][col1];
+                columns[row][1] = data[row][col2];
+            }
         return columns;
     }
 
@@ -51,6 +54,7 @@ public class ReadData{
     //return an array with two values -- standard deviation 
     //for the x column and y column
     public double[] stdDeviation(double[][] xy){
+        double[] stdDeviation =  new double[2];
         double sum = 0;
         double[] mean = ...
         ...
@@ -61,9 +65,20 @@ public class ReadData{
     //the mean is the sum of the values divided by the number 
     //of values
     public double[] mean(double[][] xy){
-        double sum = 0;
-        ...
-        return ...;
+        double[] mean = new double[2];
+        double sum1 = 0.0;
+        double sum2 = 0.0;
+        double calcMean1 = 0.0;
+        double calcMean2 = 0.0;
+        for(int row = 0; row < xy.length; row++){
+            sum1 =+ xy[row][0];
+            sum2 =+ xy[row][1];
+        }
+        calcMean1 = sum1/xy.length;
+        calcMean2= sum2/xy.length;
+        mean[0] = calcMean1;
+        mean[1] = calcMean2;
+        return mean;
     }
 
     //this returns the values of each column in standard units
@@ -94,6 +109,7 @@ public class ReadData{
         // double[][] xy = getColumns(7,9);
         // double[][] xyStd = standardUnits(xy);
         // double correlation = correlation(xyStd);
+        //double[] xyStandDev = stdDeviation(xyStd);
         // double slope = correlation * xyStd[1] / xyStd[0];
         // double[] means = mean(xy)
         // double intercept = means[1] - slope * means[0];
