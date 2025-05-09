@@ -5,7 +5,7 @@ import java.io.File;
 public class ReadData{
     //I hard-coded the number of rows and columns so 
     //I could use a 2D array
-    private double[][] data = new double[...][...];
+    private double[][] data = new double[21908][14];
 
     //This should read in the csv file and store the data in a 2D array,
     //data -- don't forget to skip the header line and parse everything
@@ -18,7 +18,10 @@ public class ReadData{
             while(scanner.hasNextLine()){
                 String line = scanner.nextLine();
                 String[] lineArr = line.split(",");
-                ...
+                for(int col = 0; col < lineArr.length; col++){
+                    double x = Double.parseDouble(lineArr[col]);
+                    data[row][col] = x;
+                }
                 row++;
             }
             scanner.close();
@@ -56,9 +59,14 @@ public class ReadData{
     public double[] stdDeviation(double[][] xy){
         double[] stdDeviation =  new double[2];
         double sum = 0;
-        double[] mean = ...
-        ...
-        return .. //sample variance!
+        double[] mean = mean(xy);
+        for(int col = 0; col < xy[0].length; col++){
+            for (int row = 0; row < xy.length; row++){
+                sum+= Math.pow((xy[row][col])-mean[col], 2);
+            }
+            stdDeviation[col] = Math.sqrt(sum/(xy.length-1));
+        }
+        return stdDeviation; //sample variance!
     }
     
     //this returns the mean of each columns of data passed in
@@ -71,8 +79,8 @@ public class ReadData{
         double calcMean1 = 0.0;
         double calcMean2 = 0.0;
         for(int row = 0; row < xy.length; row++){
-            sum1 =+ xy[row][0];
-            sum2 =+ xy[row][1];
+            sum1 += xy[row][0];
+            sum2 += xy[row][1];
         }
         calcMean1 = sum1/xy.length;
         calcMean2= sum2/xy.length;
@@ -85,10 +93,14 @@ public class ReadData{
     //the standard units are the value minus the mean divided by the standard deviation
     //this should return a double 2D array of the standard units
     public double[][] standardUnits(double[][] xy){
-        double[][] stdArr = ...
-        double[] stdDeviation = ...;
-        double[] mean = ...;
-        ...
+        double[][] stdArr = new double[21908][2];
+        double[] stdDeviation = stdDeviation(xy);
+        double[] mean = mean(xy);
+        for(int col = 0; col < xy[0].length; col++){
+            for (int row = 0; row < xy.length; row++){
+                stdArr[row][col] = (xy[row][col]-mean[col])/stdDeviation[col];
+            }
+        }
         return stdArr;
     }
     
@@ -101,21 +113,24 @@ public class ReadData{
     //the correlation is between -1 and 1
     public double correlation(double[][] xy){
         double sum = 0;
-        ...
-        return ...;    
+        for(int row = 0; row < xy.length; row++){
+            sum+= (xy[row][0]*xy[row][1]);
+        }
+        sum = sum/(xy.length-1);
+        return sum;
     }
     
     public void runRegression(){
-        // double[][] xy = getColumns(7,9);
-        // double[][] xyStd = standardUnits(xy);
-        // double correlation = correlation(xyStd);
-        //double[] xyStandDev = stdDeviation(xyStd);
-        // double slope = correlation * xyStd[1] / xyStd[0];
-        // double[] means = mean(xy)
-        // double intercept = means[1] - slope * means[0];
-        // System.out.println("Correlation: " + correlation);
-        // System.out.println("Slope: " + slope);
-        // System.out.println("Intercept: " + intercept);
+        double[][] xy = getColumns(7,9);
+        double[][] xyStd = standardUnits(xy);
+        double correlation = correlation(xyStd);
+        double[] xyStandDev = stdDeviation(xy);
+        double slope = (correlation *xyStandDev[1]) / xyStandDev[0] ;
+        double[] means = mean(xy);
+        double intercept = means[1] - slope * means[0];
+        System.out.println("Correlation: " + correlation);
+        System.out.println("Slope: " + slope);
+        System.out.println("Intercept: " + intercept);
         // Scatter s = new Scatter();
         // s.displayScatterPlot(xy[0], xy[1]);
     }
